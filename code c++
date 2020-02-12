@@ -1,0 +1,50 @@
+#include<stdio.h>
+#include<string.h>
+#include<vector>
+
+using namespace std;
+
+vector<int> coins;
+long memo[10000][100];
+int money;
+
+long coinChange(int change,int coin,vector<int> arr,int index){
+	
+	if(change < 0){
+		return 0;
+	}
+	if(change == 0){
+		return 1;
+	}
+	if(memo[change][coin] != -1){
+		return memo[change][coin];
+	}
+
+	long totalChange = 0;
+	
+	for(int i=index;i<5;i++){
+		int c = coins[i];
+		long res = coinChange(change-c,c,arr,i);
+		totalChange += res;
+	}
+	
+	memo[change][coin] = totalChange;
+	
+	return totalChange;
+}
+
+int main(){
+	
+	coins.push_back(50);
+	coins.push_back(25);
+	coins.push_back(10);
+	coins.push_back(5);
+	coins.push_back(1);
+	memset(memo,-1,sizeof(memo));
+	
+	while(scanf("%d",&money) != EOF){
+		printf("%ld\n",coinChange(money,0,coins,0));	
+	}
+	
+	return 0;
+}
